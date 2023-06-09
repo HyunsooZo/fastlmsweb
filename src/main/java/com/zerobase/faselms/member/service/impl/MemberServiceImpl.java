@@ -4,6 +4,7 @@ import com.zerobase.faselms.admin.dto.MemberDto;
 import com.zerobase.faselms.admin.mapper.MemberMapper;
 import com.zerobase.faselms.admin.model.MemberParam;
 import com.zerobase.faselms.component.MailComponent;
+import com.zerobase.faselms.course.model.ServiceResult;
 import com.zerobase.faselms.member.entity.Member;
 import com.zerobase.faselms.member.exception.MemberNotEmailAuthException;
 import com.zerobase.faselms.member.exception.MemberStopUserException;
@@ -224,6 +225,53 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
 
         return true;
+    }
+
+    @Override
+    public ServiceResult updateMember(MemberInput parameter) {
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("회원정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+
+        member.setPhone(parameter.getPhone());
+        member.setZipcode(parameter.getZipcode());
+        member.setAddr(parameter.getAddr());
+        member.setAddrDetail(parameter.getAddrDetail());
+        member.setUptDt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return new ServiceResult();
+
+    }
+
+    @Override
+    public ServiceResult updateMemberPassword(MemberInput parameter) {
+
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+
+        if (!optionalMember.isPresent()) {
+            return new ServiceResult(false,"회원정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        if(!BCrypt.checkpw(parameter.getPassword(),member.getPassword())){
+            return new ServiceResult(false,"비밀번호가 일치하지 않습니다.");
+        }
+
+        String encPassword = BCrypt.hashpw(parameter.getNewPassword(),BCrypt.gensalt());
+        member.setPassword(encPassword);
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+
     }
 
     @Override

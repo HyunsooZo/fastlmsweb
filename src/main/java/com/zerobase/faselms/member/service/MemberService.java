@@ -3,6 +3,7 @@ package com.zerobase.faselms.member.service;
 
 import com.zerobase.faselms.admin.dto.MemberDto;
 import com.zerobase.faselms.admin.model.MemberParam;
+import com.zerobase.faselms.course.model.ServiceResult;
 import com.zerobase.faselms.member.entity.Member;
 import com.zerobase.faselms.member.model.MemberInput;
 import com.zerobase.faselms.member.model.ResetPasswordInput;
@@ -38,4 +39,11 @@ public interface MemberService extends UserDetailsService {
 
     //회원 비밀번호 초기화
     boolean updatePassword(String userId, String password);
+
+    //회원정보수정
+    ServiceResult updateMember(MemberInput parameter);
+
+    //회원정보페이지내 비번 변경
+    ServiceResult updateMemberPassword(MemberInput parameter);
+
 }
