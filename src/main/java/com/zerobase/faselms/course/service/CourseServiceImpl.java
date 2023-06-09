@@ -91,6 +91,7 @@ public class CourseServiceImpl implements CourseService {
                 .saleEndDt(saleEndDt)
                 .regDt(LocalDateTime.now())
                 .filename(parameter.getFilename())
+                .urlFilename(parameter.getUrlFilename())
                 .build();
         courseRepository.save(course);
         return true;
@@ -116,6 +117,7 @@ public class CourseServiceImpl implements CourseService {
         course.setSaleEndDt(saleEndDt);
         course.setUptDt(LocalDateTime.now());
         course.setFilename(parameter.getFilename());
+        course.setUrlFilename(parameter.getUrlFilename());
         courseRepository.save(course);
 
         return true;
