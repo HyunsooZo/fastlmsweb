@@ -326,6 +326,9 @@ public class MemberServiceImpl implements MemberService {
         if(Member.MEMBER_STATUS_STOP.equals(member.getUserStatus())){
             throw new MemberStopUserException("정지된 회원입니다.");
         }
+        if(Member.MEMBER_STATUS_WITHDRAW.equals(member.getUserStatus())){
+            throw new MemberStopUserException("탈퇴된 회원입니다.");
+        }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
