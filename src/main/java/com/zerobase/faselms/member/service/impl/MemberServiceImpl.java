@@ -6,12 +6,14 @@ import com.zerobase.faselms.admin.model.MemberParam;
 import com.zerobase.faselms.component.MailComponent;
 import com.zerobase.faselms.course.model.ServiceResult;
 import com.zerobase.faselms.member.entity.Member;
+import com.zerobase.faselms.member.entity.MemberCode;
 import com.zerobase.faselms.member.exception.MemberNotEmailAuthException;
 import com.zerobase.faselms.member.exception.MemberStopUserException;
 import com.zerobase.faselms.member.model.MemberInput;
 import com.zerobase.faselms.member.model.ResetPasswordInput;
 import com.zerobase.faselms.member.repository.MemberRepository;
 import com.zerobase.faselms.member.service.MemberService;
+import com.zerobase.faselms.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -262,16 +264,49 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = optionalMember.get();
 
-        if(!BCrypt.checkpw(parameter.getPassword(),member.getPassword())){
+        if(PasswordUtils.equals(parameter.getPassword(),member.getPassword())){
             return new ServiceResult(false,"비밀번호가 일치하지 않습니다.");
         }
 
-        String encPassword = BCrypt.hashpw(parameter.getNewPassword(),BCrypt.gensalt());
+        String encPassword = PasswordUtils.encPassword(parameter.getNewPassword());
         member.setPassword(encPassword);
         memberRepository.save(member);
 
         return new ServiceResult(true);
 
+    }
+
+    @Override
+    public ServiceResult withdraw(String userId, String password) {
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (!optionalMember.isPresent()) {
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        if (!PasswordUtils.equals(password, member.getPassword())) {
+            return new ServiceResult(false, "비밀번호가 일치하지 않습니다.");
+        }
+
+        member.setUserName("삭제회원");
+        member.setPhone("");
+        member.setPassword("");
+        member.setRegDt(null);
+        member.setUptDt(null);
+        member.setEmailAuthYn(false);
+        member.setEmailAuthDt(null);
+        member.setEmailAuthKey("");
+        member.setResetPasswordKey("");
+        member.setResetPasswordLimitDt(null);
+        member.setUserStatus(MemberCode.MEMBER_STATUS_WITHDRAW);
+        member.setZipcode("");
+        member.setAddr("");
+        member.setAddrDetail("");
+        memberRepository.save(member);
+
+        return new ServiceResult();
     }
 
     @Override
