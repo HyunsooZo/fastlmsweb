@@ -52,10 +52,19 @@
               font-weight: bold;
               color: red;
           }
+          p.noCategory{
+              text-align: center;
+              padding : 100px;
+          }
       </style>
       <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
       <script>
           $(document).ready(function() {
+
+              $('#searchCourseId').on('change', function() {
+                  var id = $(this).val();
+                  location.href = '?searchCourseId=' + id;
+              });
 
 
               $('.row-buttons button').on('click', function() {
@@ -88,6 +97,13 @@
 
       <div class="list">
           <div class="buttons">
+              <select id="searchCourseId">
+                  <option value="">전체 강좌</option>
+                  <option th:each="x : ${courseList}"th:value="${x.id}"
+                          th:selected="${#strings.equals(param.searchCourseId, x.id)}"
+                          th:text="${x.subject}">자바 프로그래밍</option>
+
+              </select>
               <p class="total-count">전체 <span th:text="${totalCount}"></span>개</p>
           </div>
           <table>
@@ -134,6 +150,11 @@
                        <button value="CANCEL" type="button">수강취소 처리</button>
                    </div>
                </td>
+           <tr th:if="${#lists.size(list)<1}">
+               <td colspan="8">
+                   <p class="noCategory"> 카테고리가 존재하지 않습니다.</p>
+               </td>
+           </tr>
            </tr>
            </tbody>
       </table>

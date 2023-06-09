@@ -32,4 +32,7 @@ public interface CourseService {
 
     //프론트에서 강좌상세정보 가져옴.
     CourseDto frontDetail(long id);
+
+    //전체강좌
+    List<CourseDto> listAll();
 }

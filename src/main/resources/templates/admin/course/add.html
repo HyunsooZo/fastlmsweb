@@ -60,7 +60,7 @@
       <h1>강좌 관리 - 강좌 등록</h1>
       <div th:replace="/fragment/layout.html :: fragment-admin-body-menu"></div>
       <div class="detail">
-          <form id="submitForm" method="post">
+          <form id="submitForm" method="post" enctype="multipart/form-data">
                <table>
                    <tbody>
                    <tr>
@@ -109,6 +109,13 @@
                        <td><input th:value="${detail.salePrice}" type="text"
                                   name="salePrice" required placeholder="판매가 입력"/></td>
                    </tr>
+
+                   <tr>
+                       <th>첨부파일</th>
+                       <td><input type="file"
+                                  name="file" required/></td>
+                   </tr>
+
 
                    <tr>
                        <th>할인종료일</th>
