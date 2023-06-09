@@ -1,6 +1,10 @@
 package com.zerobase.faselms.course.dto;
 
+import com.zerobase.faselms.course.entity.TakeCourse;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.DecimalFormat;
@@ -8,6 +12,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 public class TakeCourseDto {
 
@@ -32,5 +39,17 @@ public class TakeCourseDto {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         return regDt != null ? regDt.format(formatter):"";
 
+    }
+
+    public static TakeCourseDto of(TakeCourse x) {
+
+        return TakeCourseDto.builder()
+                .id(x.getId())
+                .courseId(x.getCourseId())
+                .userId(x.getUserId())
+                .payPrice(x.getPayPrice())
+                .status(x.getStatus())
+                .regDt(x.getRegDt())
+                .build();
     }
 }

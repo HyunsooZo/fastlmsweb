@@ -2,6 +2,7 @@ package com.zerobase.faselms.course.service;
 
 import com.zerobase.faselms.course.dto.TakeCourseDto;
 import com.zerobase.faselms.course.entity.TakeCourse;
+import com.zerobase.faselms.course.entity.TakeCourseCode;
 import com.zerobase.faselms.course.mapper.TakeCourseMapper;
 import com.zerobase.faselms.course.model.TakeCourseParam;
 import com.zerobase.faselms.course.repository.TakeCourseRepository;
@@ -51,5 +52,41 @@ public class TakeCourseServiceImpl implements TakeCourseService {
         takeCourseRepository.save(takeCourse);
 
         return new ServiceResult(true);
+    }
+
+    @Override
+    public List<TakeCourseDto> myCourse(String userId) {
+
+        TakeCourseParam parameter = new TakeCourseParam();
+        parameter.setUserId(userId);
+        List<TakeCourseDto> list = takeCourseMapper.selectListMyCourse(parameter);
+
+        return list;
+    }
+
+    @Override
+    public TakeCourseDto detail(long id) {
+
+        Optional<TakeCourse> optionalTakeCourse = takeCourseRepository.findById(id);
+        if (optionalTakeCourse.isPresent()) {
+            return TakeCourseDto.of(optionalTakeCourse.get());
+        }
+        return null;
+    }
+
+    @Override
+    public ServiceResult cancel(long id) {
+
+        Optional<TakeCourse> optionalTakeCourse = takeCourseRepository.findById(id);
+        if (!optionalTakeCourse.isPresent()) {
+            return new ServiceResult(false, "수강 정보가 존재하지 않습니다.");
+        }
+
+        TakeCourse takeCourse = optionalTakeCourse.get();
+
+        takeCourse.setStatus(TakeCourseCode.STATUS_CANCEL);
+        takeCourseRepository.save(takeCourse);
+
+        return new ServiceResult();
     }
 }

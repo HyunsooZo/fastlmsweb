@@ -3,6 +3,8 @@ package com.zerobase.faselms.course.service;
 import com.zerobase.faselms.course.dto.CourseDto;
 import com.zerobase.faselms.course.model.CourseInput;
 import com.zerobase.faselms.course.model.CourseParam;
+import com.zerobase.faselms.course.model.ServiceResult;
+import com.zerobase.faselms.course.model.TakeCourseInput;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ public interface CourseService {
     //강좌상세정보
     CourseDto getById(long id);
 
+    //수강신청
+    ServiceResult req(TakeCourseInput parameter);
 
     //강좌정보수정
     boolean set(CourseInput parameter);
